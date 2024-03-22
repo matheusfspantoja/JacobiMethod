@@ -1,7 +1,6 @@
 import numpy as np
 
 def input_matrix(prompt, size):
-    print(prompt)
     matrix = []
     for i in range(size):
         while True:
@@ -16,10 +15,9 @@ def input_matrix(prompt, size):
     return np.array(matrix)
 
 def input_vector(prompt, size):
-    print(prompt)
     while True:
         try:
-            values = list(map(float, input("Digite os valores separados por espaço: ").split()))
+            values = list(map(float, input("Digite os valores do vetor b separados por espaço: ").split()))
             if len(values) != size:
                 raise ValueError("O número de valores no vetor b não corresponde ao número de linhas da matriz A.")
             break
