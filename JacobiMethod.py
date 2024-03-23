@@ -1,6 +1,7 @@
 import numpy as np
 
 def input_matrix(prompt, size):
+    #print(prompt)
     matrix = []
     for i in range(size):
         while True:
@@ -15,9 +16,11 @@ def input_matrix(prompt, size):
     return np.array(matrix)
 
 def input_vector(prompt, size):
+    #print(prompt)
     while True:
         try:
             values = list(map(float, input("Digite os valores do vetor b separados por espaço: ").split()))
+            print("\n")
             if len(values) != size:
                 raise ValueError("O número de valores no vetor b não corresponde ao número de linhas da matriz A.")
             break
@@ -28,16 +31,18 @@ def input_vector(prompt, size):
 def jacobi(A, b, x0, max_iter=1000, tol=1e-6):
     n = len(b)
     x = np.copy(x0)
-    for _ in range(max_iter):
+    for it in range(max_iter):
         x_new = np.zeros_like(x)
         for i in range(n):
             s1 = np.dot(A[i, :i], x[:i])
             s2 = np.dot(A[i, i + 1:], x[i + 1:])
             x_new[i] = (b[i] - s1 - s2) / A[i, i]
         if np.linalg.norm(x_new - x) < tol:
-            return x_new
+            return x_new, it + 1  # Retorna a solução e o número de iterações
         x = np.copy(x_new)
-    raise Exception("O método de Jacobi não convergiu após {} iterações.".format(max_iter))
+        if it < 10:
+            print(f"Iteração {it + 1}: {x}")
+    raise Exception("\nO método de Jacobi não convergiu após {} iterações.".format(max_iter))
 
 try:
     # Entrada de dados para a matriz A
@@ -50,8 +55,8 @@ try:
     x0 = b / np.diag(A)  # Solução inicial modificada
 
     # Resolver o sistema usando o método de Jacobi
-    solution = jacobi(A, b, x0)
-    print("Solução encontrada pelo método de Jacobi:", solution)
+    solution, num_iter = jacobi(A, b, x0)
+    print("\nSolução encontrada após {} iterações:".format(num_iter), solution)
 except ValueError as ve:
     print(ve)
 except Exception as e:
